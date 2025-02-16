@@ -1,0 +1,40 @@
+/* Youtube caption */
+.ytp-caption-window-container {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  pointer-events: none;
+}
+
+.caption-window {
+  position: absolute;
+  line-height: normal;
+  z-index: 40;
+  pointer-events: auto;
+  cursor: move;
+  cursor: -webkit-grab;
+  cursor: grab;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  -webkit-user-select: none;
+}
+
+.caption-window.ytp-caption-window-bottom {
+  transition: margin-bottom 0.2s ease-in-out;
+}
+
+body:hover .caption-window.ytp-caption-window-bottom {
+  margin-bottom: 50px;
+  overflow-wrap: normal;
+  display: block;
+}
+
+.ytp-caption-segment {
+  font-size: max(3.2vw, 12px) !important;
+}
+
+.ytp-caption-window-bottom
+.caption-visual-line:not(:nth-last-child(2)):not(:last-child) {
+  display: none !important;
+}

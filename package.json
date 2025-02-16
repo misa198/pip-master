@@ -1,0 +1,43 @@
+{
+  "name": "pip-master",
+  "version": "1.0.0",
+  "description": "PiP Master",
+  "homepage": "https://github.com/misa198/pip-master",
+  "repository": "https://github.com/misa198/pip-master/tree/master",
+  "author": "Thanh Vu",
+  "license": "MIT",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "lint": "eslint src",
+    "build": "rm -rf build/* && webpack --config webpack.config.mjs"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.20.0",
+    "@types/chrome": "0.0.304",
+    "@types/node": "22.13.4",
+    "copy-webpack-plugin": "^12.0.2",
+    "css-loader": "^7.1.2",
+    "eslint": "^9.20.1",
+    "globals": "^15.15.0",
+    "html-minifier": "^4.0.0",
+    "html-webpack-plugin": "^5.6.3",
+    "prettier": "3.5.1",
+    "sass": "^1.85.0",
+    "sass-loader": "^16.0.5",
+    "style-loader": "^4.0.0",
+    "ts-loader": "9.5.2",
+    "typescript": "5.7.3",
+    "typescript-eslint": "^8.24.0",
+    "vue-loader": "^17.4.2",
+    "vue-template-compiler": "^2.7.16",
+    "webpack": "5.98.0",
+    "webpack-cli": "6.0.1"
+  },
+  "keywords": [],
+  "dependencies": {
+    "@vueuse/core": "^12.7.0",
+    "pinia": "^3.0.1",
+    "vue": "^3.5.13"
+  }
+}

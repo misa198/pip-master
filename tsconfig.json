@@ -1,0 +1,15 @@
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "lib": ["es6", "dom"],
+    "skipLibCheck": true,
+    "target": "es5",
+    "allowJs": true,
+    "moduleResolution": "node",
+    "types": ["chrome", "node"],
+    "strict": true,
+    "sourceMap": false
+  },
+  "include": ["src/**/*.ts", "src/**/*.vue"],
+  "exclude": ["node_modules", "build"]
+}
