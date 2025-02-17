@@ -35,15 +35,26 @@ function onPipHide(pipWindow: Window, cb: () => void) {
   });
 }
 
+function clearYoutubeCaption() {
+  if (window.youtubeCaption && window.youtubeCaptionParent) {
+    window.youtubeCaption = undefined;
+    window.youtubeCaptionParent = undefined;
+  }
+}
+
 const getYoutubeCaption = (pipWindow: Window) => {
   const caption = document.getElementById('ytp-caption-window-container');
   const youtubeCaptionParent = caption?.parentElement;
   if (caption && youtubeCaptionParent) {
+    window.youtubeCaption = caption;
+    window.youtubeCaptionParent = youtubeCaptionParent;
     pipWindow.document.body.append(caption);
     setVideoType(pipWindow, 'youtube');
 
     onPipHide(pipWindow, () => {
+      clearYoutubeCaption();
       youtubeCaptionParent.append(caption);
+      console.debug('remove youtube caption');
     });
   }
 };
@@ -63,24 +74,9 @@ const getVideoJsCaption = (pipWindow: Window) => {
   }
 };
 
-// function getJwPlayerCaption(pipWindow: Window) {
-//   const caption = document.querySelector('.jw-captions') as HTMLDivElement;
-//   console.log(caption);
-//   const jwPlayerCaptionParent = caption?.parentElement;
-//   if (caption && jwPlayerCaptionParent) {
-//     pipWindow.document.body.append(caption);
-//     setVideoType(pipWindow, 'jwplayer');
-//
-//     onPipHide(pipWindow, () => {
-//       jwPlayerCaptionParent.append(caption);
-//     });
-//   }
-// }
-
 const getCaption = (pipWindow: Window) => {
   getYoutubeCaption(pipWindow);
   getVideoJsCaption(pipWindow);
-  // getJwPlayerCaption(pipWindow);
 };
 
 function putVideoBack(video: HTMLVideoElement, videoParent: HTMLElement) {
@@ -124,6 +120,9 @@ async function requestPipPopup(video: HTMLVideoElement) {
   const script = document.createElement('script');
   script.src = mainUrl;
   pipWindow.document.body.append(script);
+  await new Promise((res) => {
+    script.addEventListener('load', () => res(true));
+  });
 
   getCaption(pipWindow);
 
@@ -137,10 +136,51 @@ async function requestPipPopup(video: HTMLVideoElement) {
 const exitPipPopup = () => {
   window.pipWindow?.close();
   window.pipWindow = undefined;
+  clearYoutubeCaption();
 };
 
 function isPipVideo(video: HTMLVideoElement) {
   return video.hasAttribute(PIP_TAG);
+}
+
+const checkAndPushYoutubeVideoLiveStatus = () => {
+  const liveBadge = window.document.querySelector(
+    '.ytp-live-badge',
+  ) as HTMLDivElement;
+  const isLive =
+    liveBadge &&
+    liveBadge.hasAttribute('disabled') &&
+    liveBadge.style.display !== 'none';
+  if (!window.pipWindow) return;
+  window.pipWindow.postMessage(
+    isLive ? 'YOUTUBE_LIVE' : 'YOUTUBE_UPLOADED',
+    '*',
+  );
+  getYoutubeCaption(window.pipWindow);
+};
+
+function checkWindowUrlChange() {
+  window.navigation.addEventListener(
+    'navigate',
+    () => {
+      if (!window.pipWindow) {
+        return;
+      }
+      const video = window.pipWindow.document.querySelector('video');
+      if (!video) {
+        return;
+      }
+      if (window.youtubeCaption && window.youtubeCaptionParent) {
+        window.youtubeCaptionParent.append(window.youtubeCaption);
+        clearYoutubeCaption();
+      }
+
+      video.addEventListener('canplay', checkAndPushYoutubeVideoLiveStatus);
+    },
+    {
+      once: true,
+    },
+  );
 }
 
 async function togglePip() {
@@ -157,15 +197,19 @@ async function togglePip() {
 
   if (isPipVideo(video) && isInIframe) {
     await document.exitPictureInPicture();
+    checkAndPushYoutubeVideoLiveStatus();
     return;
   }
 
   if (isInIframe) {
     await requestPipByVideo(video);
+    checkAndPushYoutubeVideoLiveStatus();
     return;
   }
 
   await requestPipPopup(video);
+  checkAndPushYoutubeVideoLiveStatus();
+  checkWindowUrlChange();
 }
 
 togglePip().then();

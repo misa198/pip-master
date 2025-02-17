@@ -3,6 +3,7 @@ import { defineStore } from 'pinia';
 type State = {
   currentTime: number;
   duration: number;
+  isLive: boolean;
 };
 
 export const useVideoStore = defineStore('video', {
@@ -10,6 +11,7 @@ export const useVideoStore = defineStore('video', {
     return {
       currentTime: 0,
       duration: 0,
+      isLive: false,
     };
   },
   actions: {
@@ -18,6 +20,9 @@ export const useVideoStore = defineStore('video', {
     },
     setTotalTime(time: number) {
       this.duration = time;
+    },
+    setIsLive(isLive: boolean) {
+      this.isLive = isLive;
     },
   },
 });

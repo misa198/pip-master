@@ -3,11 +3,13 @@ import Slider from './Slider.vue';
 import { onBeforeUnmount, onMounted, ref } from 'vue';
 import { pause, play } from '../utils/video-control';
 import { useVideoStore } from '../store/video-store';
+import { storeToRefs } from 'pinia';
 
 const value = ref(0);
 const temporaryValue = ref(0);
 const video = ref<HTMLVideoElement>();
 const videoStore = useVideoStore();
+const { isLive } = storeToRefs(useVideoStore());
 
 const updateTime = (v: number) => {
   if (!video.value) return;
@@ -38,7 +40,7 @@ const setTime = () => {
 };
 
 const onKeyboardControls = (e: KeyboardEvent) => {
-  if (!video.value) return;
+  if (!video.value || isLive.value) return;
   if (e.key >= '0' && e.key <= '9') {
     const v = parseInt(e.key, 10);
     video.value.currentTime = (v / 10) * video.value.duration;
@@ -64,13 +66,20 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <div class="progress-bar">
+  <div
+    class="progress-bar"
+    :style="{
+      pointerEvents: isLive ? 'none' : 'auto',
+    }"
+  >
     <Slider
+      v-if="!isLive"
       v-model="value"
       @update:model-value="updateTime"
       @completed-mouse-move="completedMouseMove"
       @clicked-to-update="clickedToUpdate"
     />
+    <Slider v-else :model-value="100" />
   </div>
 </template>
 

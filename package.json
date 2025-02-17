@@ -1,7 +1,7 @@
 {
   "name": "pip-master",
   "version": "1.0.0",
-  "description": "PiP Master",
+  "description": "This Chrome extension enhances the Picture-in-Picture (PIP) experience by adding advanced video controls.",
   "homepage": "https://github.com/misa198/pip-master",
   "repository": "https://github.com/misa198/pip-master/tree/master",
   "author": "Thanh Vu",

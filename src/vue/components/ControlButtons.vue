@@ -5,11 +5,14 @@ import PausedIcon from './icons/PausedIcon.vue';
 import ForwardIcon from './icons/ForwardIcon.vue';
 import { onBeforeUnmount, onMounted, ref } from 'vue';
 import { play } from '../utils/video-control';
+import { storeToRefs } from 'pinia';
+import { useVideoStore } from '../store/video-store';
 
 const SEEK_TIME = 10;
 
 const video = ref<HTMLVideoElement>();
 const isPlaying = ref(false);
+const { isLive } = storeToRefs(useVideoStore());
 
 const onPlay = () => {
   if (!video.value) return;
@@ -22,12 +25,22 @@ const onPause = () => {
 };
 
 const onRewind = () => {
-  if (!video.value) return;
+  if (!video.value || isLive.value) return;
+  if (video.value.currentTime <= SEEK_TIME) {
+    video.value.currentTime = 0;
+    return;
+  }
   video.value.currentTime -= SEEK_TIME;
 };
 
 const onForward = () => {
-  if (!video.value) return;
+  if (!video.value || isLive.value) return;
+  const duration = video.value.duration;
+  if (video.value.currentTime + SEEK_TIME >= duration) {
+    video.value.currentTime = duration;
+    return;
+  }
+
   video.value.currentTime += SEEK_TIME;
 };
 
@@ -46,9 +59,9 @@ const onKeyboardControls = (e: KeyboardEvent) => {
   if (e.key === ' ' || e.key === 'k') {
     video.value.paused ? play(video.value) : video.value.pause();
   } else if (e.key === 'ArrowRight' || e.key === 'l') {
-    video.value.currentTime += SEEK_TIME;
+    onForward();
   } else if (e.key === 'ArrowLeft' || e.key === 'j') {
-    video.value.currentTime -= SEEK_TIME;
+    onRewind();
   }
 };
 
@@ -72,6 +85,7 @@ onBeforeUnmount(() => {
 <template>
   <div class="control-buttons">
     <button
+      v-if="!isLive"
       class="control-buttons__button control-buttons__button--seek"
       @click="onRewind"
     >
@@ -100,6 +114,7 @@ onBeforeUnmount(() => {
       <PausedIcon class="control-buttons__button__icon" />
     </button>
     <button
+      v-if="!isLive"
       class="control-buttons__button control-buttons__button--seek"
       @click="onForward"
     >

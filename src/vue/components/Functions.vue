@@ -3,12 +3,18 @@ import Timestamp from './Timestamp.vue';
 import FitWindow from './FitWindow.vue';
 import SpeedControl from './SpeedControl.vue';
 import VolumeControl from './VolumeControl.vue';
+import LiveBadge from './LiveBadge.vue';
+import { storeToRefs } from 'pinia';
+import { useVideoStore } from '../store/video-store';
+
+const { isLive } = storeToRefs(useVideoStore());
 </script>
 
 <template>
   <div class="functions">
     <div class="functions__section functions__left">
-      <Timestamp class="functions__timestamp" />
+      <LiveBadge v-if="isLive" />
+      <Timestamp v-else class="functions__timestamp" />
       <VolumeControl />
     </div>
     <div class="functions__section functions__right">

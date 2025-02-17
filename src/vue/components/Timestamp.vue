@@ -3,7 +3,7 @@ import { formatTime } from '../utils/time';
 import { storeToRefs } from 'pinia';
 import { useVideoStore } from '../store/video-store';
 
-const { currentTime, duration } = storeToRefs(useVideoStore());
+const { currentTime, duration, isLive } = storeToRefs(useVideoStore());
 </script>
 
 <template>

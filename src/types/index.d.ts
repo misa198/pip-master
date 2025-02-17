@@ -10,9 +10,21 @@ declare global {
     };
 
     pipWindow?: Window;
+
+    navigation: {
+      addEventListener(
+        event: 'navigate',
+        cb: (event: Event) => void,
+        options?: { once: boolean },
+      ): void;
+      removeEventListener(event: 'navigate', cb: (event: Event) => void): void;
+    };
+
+    youtubeCaption?: HTMLElement;
+    youtubeCaptionParent?: HTMLElement;
   }
 
-  var documentPictureInPicture: {
+  const documentPictureInPicture: {
     requestWindow(options?: { width: number; height: number }): Promise<Window>;
   };
 }

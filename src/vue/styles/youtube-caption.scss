@@ -22,6 +22,7 @@
 
 .caption-window.ytp-caption-window-bottom {
   transition: margin-bottom 0.2s ease-in-out;
+  background: transparent !important;
 }
 
 body:hover .caption-window.ytp-caption-window-bottom {
