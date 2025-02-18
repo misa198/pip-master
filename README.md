@@ -5,7 +5,7 @@
 PiP Master
 </h1>
 <p align="center">
-  <a href="">
+  <a href="https://chromewebstore.google.com/detail/okffoefeckfpdeipgpjichokknjddmhf">
     <img src="./docs/chrome-store.png" width="30%"/>
   </a>
 </p>

@@ -13,10 +13,10 @@
     "service_worker": "background.js",
     "type": "module"
   },
-  "permissions": ["contextMenus", "scripting", "activeTab", "storage"],
+  "permissions": ["scripting"],
   "web_accessible_resources": [
     {
-      "resources": ["pip.css", "main.js"],
+      "resources": ["main.js"],
       "matches": ["<all_urls>"]
     }
   ],
